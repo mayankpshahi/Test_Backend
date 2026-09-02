@@ -7,7 +7,13 @@
     "dev:frontend": "vite",
     "dev:backend": "nodemon src/server/server.js",
     "start": "node src/server/server.js",
-    "build": "vite build"
+    "build": "vite build",
+    "test": "jest"
+  },
+  "jest": {
+    "testMatch": [
+      "<rootDir>/tests/**/*.test.js"
+    ]
   },
   "dependencies": {
     "@headlessui/react": "^1.7.18",

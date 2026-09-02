@@ -8,6 +8,7 @@ class MockDatabase {
     this.users = new Map();
     this.transactions = new Map();
     this.validationRequests = new Map();
+    this.watchlists = new Map(); // userId -> Set<assetId>
     this.initializeData();
   }
 
@@ -444,6 +445,31 @@ class MockDatabase {
     };
     this.assets.set(id, updatedAsset);
     return updatedAsset;
+  }
+
+  // Watchlist methods
+  getUserWatchlistIds(userId) {
+    if (!this.watchlists.has(userId)) {
+      this.watchlists.set(userId, new Set());
+    }
+    return this.watchlists.get(userId);
+  }
+
+  getWatchlist(userId) {
+    return Array.from(this.getUserWatchlistIds(userId))
+      .map(assetId => this.assets.get(assetId))
+      .filter(Boolean);
+  }
+
+  addToWatchlist(userId, assetId) {
+    const watchlistIds = this.getUserWatchlistIds(userId);
+    const alreadyExists = watchlistIds.has(assetId);
+    watchlistIds.add(assetId);
+    return { alreadyExists };
+  }
+
+  removeFromWatchlist(userId, assetId) {
+    return this.getUserWatchlistIds(userId).delete(assetId);
   }
 
   // Validator methods
